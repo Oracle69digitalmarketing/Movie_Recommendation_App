@@ -12,9 +12,11 @@ app.use(express.json());
 // Routes
 const authRoutes = require('./routes/auth');
 const movieRoutes = require('./routes/movies');
+const userRoutes = require('./routes/users');  // Added user routes
 
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', movieRoutes);
+app.use('/api/users', userRoutes);  // Use /api prefix for consistency
 
 // DB + Server
 mongoose.connect(process.env.MONGO_URI)
