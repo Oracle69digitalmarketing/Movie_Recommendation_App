@@ -10,6 +10,8 @@ import MovieList from './pages/MovieList';
 import AddMovie from './pages/AddMovie';
 import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import PasswordReset from './pages/PasswordReset';
 
 const App = () => {
   return (
@@ -19,7 +21,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        
+
         <Route
           path="/dashboard"
           element={
@@ -57,6 +59,22 @@ const App = () => {
           element={
             <PrivateRoute>
               <Notifications />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <PrivateRoute>
+              <Settings />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/password-reset"
+          element={
+            <PrivateRoute>
+              <PasswordReset />
             </PrivateRoute>
           }
         />
