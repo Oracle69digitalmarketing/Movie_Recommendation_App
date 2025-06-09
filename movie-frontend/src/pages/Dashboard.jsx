@@ -7,12 +7,15 @@ export default function Dashboard() {
   const { token, user, logout } = useContext(AuthContext);
   const [message, setMessage] = useState('');
   const [movieForm, setMovieForm] = useState({ title: '', genre: '' });
+  const [movies, setMovies] = useState([]);
+  const [editingId, setEditingId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
       setAuthToken(token);
       fetchProtectedMessage();
+      fetchMovies();
     }
   }, [token]);
 
@@ -25,14 +28,45 @@ export default function Dashboard() {
     }
   };
 
-  const handleAddMovie = async (e) => {
+  const fetchMovies = async () => {
+    try {
+      const res = await api.get('/movies');
+      setMovies(res.data);
+    } catch {
+      setMessage('Failed to fetch movies');
+    }
+  };
+
+  const handleAddOrUpdateMovie = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/movies/add', movieForm);
-      setMessage(res.data.message || 'Movie added');
+      if (editingId) {
+        await api.put(`/movies/${editingId}`, movieForm);
+        setMessage('Movie updated');
+      } else {
+        await api.post('/movies/add', movieForm);
+        setMessage('Movie added');
+      }
       setMovieForm({ title: '', genre: '' });
+      setEditingId(null);
+      fetchMovies();
     } catch {
-      setMessage('Failed to add movie');
+      setMessage('Failed to save movie');
+    }
+  };
+
+  const handleEdit = (movie) => {
+    setMovieForm({ title: movie.title, genre: movie.genre });
+    setEditingId(movie._id);
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await api.delete(`/movies/${id}`);
+      setMessage('Movie deleted');
+      fetchMovies();
+    } catch {
+      setMessage('Delete failed');
     }
   };
 
@@ -48,8 +82,8 @@ export default function Dashboard() {
       <p>Welcome, {user?.name}</p>
       <button onClick={handleLogout}>Logout</button>
 
-      <h3>Add Movie</h3>
-      <form onSubmit={handleAddMovie} className="form">
+      <h3>{editingId ? 'Edit Movie' : 'Add Movie'}</h3>
+      <form onSubmit={handleAddOrUpdateMovie} className="form">
         <input
           required
           placeholder="Title"
@@ -62,10 +96,21 @@ export default function Dashboard() {
           value={movieForm.genre}
           onChange={(e) => setMovieForm({ ...movieForm, genre: e.target.value })}
         />
-        <button type="submit">Add Movie</button>
+        <button type="submit">{editingId ? 'Update' : 'Add'}</button>
       </form>
 
       <p>{message}</p>
+
+      <h3>My Movies</h3>
+      <ul>
+        {movies.map((movie) => (
+          <li key={movie._id}>
+            <strong>{movie.title}</strong> — {movie.genre}
+            <button onClick={() => handleEdit(movie)}>Edit</button>
+            <button onClick={() => handleDelete(movie._id)}>Delete</button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
