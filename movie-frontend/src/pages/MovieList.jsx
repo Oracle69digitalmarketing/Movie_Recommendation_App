@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import api from '../services/api';
+import api, { setAuthToken } from '../services/api';
 import AuthContext from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,19 +7,29 @@ export default function MovieList() {
   const [movies, setMovies] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ title: '', genre: '' });
-  const { logout } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchMovies();
-  }, []);
+    if (token) {
+      setAuthToken(token);
+      fetchMovies();
+    } else {
+      navigate('/login');
+    }
+  }, [token]);
 
   const fetchMovies = async () => {
+    setLoading(true);
     try {
       const res = await api.get('/movies/all');
       setMovies(res.data);
     } catch {
-      alert('Failed to fetch movies');
+      setMessage('Failed to fetch movies');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -28,8 +38,9 @@ export default function MovieList() {
     try {
       await api.delete(`/movies/${id}`);
       setMovies(movies.filter((m) => m._id !== id));
+      setMessage('Movie deleted successfully');
     } catch {
-      alert('Delete failed');
+      setMessage('Delete failed');
     }
   };
 
@@ -41,10 +52,12 @@ export default function MovieList() {
   const cancelEdit = () => {
     setEditingId(null);
     setEditForm({ title: '', genre: '' });
+    setMessage('');
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await api.put(`/movies/${editingId}`, editForm);
       setMovies(
@@ -53,8 +66,11 @@ export default function MovieList() {
         )
       );
       cancelEdit();
+      setMessage('Movie updated');
     } catch {
-      alert('Update failed');
+      setMessage('Update failed');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -62,11 +78,15 @@ export default function MovieList() {
     <div className="container">
       <h2>Movie List</h2>
       <button onClick={() => navigate('/dashboard')}>Back to Dashboard</button>
+
+      {message && <p>{message}</p>}
+      {loading && <p>Loading...</p>}
+
       <ul>
         {movies.map((movie) => (
           <li key={movie._id}>
             {editingId === movie._id ? (
-              <form onSubmit={handleUpdate}>
+              <form onSubmit={handleUpdate} style={{ display: 'inline' }}>
                 <input
                   value={editForm.title}
                   onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
@@ -77,7 +97,7 @@ export default function MovieList() {
                   onChange={(e) => setEditForm({ ...editForm, genre: e.target.value })}
                   required
                 />
-                <button type="submit">Save</button>
+                <button type="submit" disabled={loading}>Save</button>
                 <button type="button" onClick={cancelEdit}>Cancel</button>
               </form>
             ) : (
