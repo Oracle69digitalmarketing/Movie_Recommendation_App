@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const bcrypt = require('bcryptjs');
 const authenticateToken = require('../middleware/authenticateToken');
 
-// PUT /users/settings
+// Update user settings (name, email)
 router.put('/settings', authenticateToken, async (req, res) => {
   const userId = req.user.id;
-  const { username, email } = req.body;
+  const { name, email } = req.body;
 
-  if (!username || !email) {
-    return res.status(400).json({ message: 'Username and email are required' });
+  if (!name || !email) {
+    return res.status(400).json({ message: 'Name and email are required' });
   }
 
   try {
@@ -21,7 +21,7 @@ router.put('/settings', authenticateToken, async (req, res) => {
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { username, email },
+      { name, email },
       { new: true, runValidators: true }
     );
 
@@ -35,7 +35,7 @@ router.put('/settings', authenticateToken, async (req, res) => {
   }
 });
 
-// POST /users/reset-password
+// Reset password (oldPassword, newPassword)
 router.post('/reset-password', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { oldPassword, newPassword } = req.body;
@@ -48,13 +48,13 @@ router.post('/reset-password', authenticateToken, async (req, res) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    const isMatch = await user.matchPassword(oldPassword);
     if (!isMatch) {
       return res.status(401).json({ message: 'Old password is incorrect' });
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
     await user.save();
 
     res.json({ message: 'Password updated successfully' });
