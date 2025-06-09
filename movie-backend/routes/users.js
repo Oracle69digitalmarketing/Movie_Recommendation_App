@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const User = require('../models/User');
 const authenticateToken = require('../middleware/authenticateToken');
 
-// Update user settings
+// PUT /users/settings
 router.put('/settings', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { username, email } = req.body;
@@ -35,7 +35,7 @@ router.put('/settings', authenticateToken, async (req, res) => {
   }
 });
 
-// Password reset
+// POST /users/reset-password
 router.post('/reset-password', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { oldPassword, newPassword } = req.body;
