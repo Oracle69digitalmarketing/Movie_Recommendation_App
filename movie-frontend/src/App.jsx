@@ -4,11 +4,12 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import AddMovie from './pages/AddMovie';
-import MovieList from './pages/MovieList';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
+import MovieList from './pages/MovieList';
+import AddMovie from './pages/AddMovie';
+import Notifications from './pages/Notifications';
+import Profile from './pages/Profile';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        
         <Route
           path="/dashboard"
           element={
@@ -27,10 +29,10 @@ const App = () => {
           }
         />
         <Route
-          path="/profile"
+          path="/movies"
           element={
             <PrivateRoute>
-              <Profile />
+              <MovieList />
             </PrivateRoute>
           }
         />
@@ -43,10 +45,18 @@ const App = () => {
           }
         />
         <Route
-          path="/movies"
+          path="/profile"
           element={
             <PrivateRoute>
-              <MovieList />
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <PrivateRoute>
+              <Notifications />
             </PrivateRoute>
           }
         />
