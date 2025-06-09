@@ -4,6 +4,9 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import AddMovie from './pages/AddMovie';
+import MovieList from './pages/MovieList';
 import Header from './components/Header';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -20,6 +23,30 @@ const App = () => {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/add-movie"
+          element={
+            <PrivateRoute>
+              <AddMovie />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/movies"
+          element={
+            <PrivateRoute>
+              <MovieList />
             </PrivateRoute>
           }
         />
