@@ -3,18 +3,23 @@ import AuthContext from '../context/AuthContext';
 import api from '../services/api';
 
 export default function Profile() {
-  const { token, user, logout } = useContext(AuthContext);
-  const [profile, setProfile] = useState({ name: '', email: '' });
+  const { token, user } = useContext(AuthContext);
+  const [profile, setProfile] = useState({ username: '', email: '' });
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (token) fetchProfile();
-  }, [token]);
+    if (user) {
+      setProfile({ username: user.username || '', email: user.email || '' });
+    } else if (token) {
+      fetchProfile();
+    }
+  }, [user, token]);
 
   const fetchProfile = async () => {
     try {
       const res = await api.get('/auth/profile');
-      setProfile(res.data);
+      setProfile({ username: res.data.username, email: res.data.email });
     } catch {
       setMessage('Failed to load profile');
     }
@@ -26,22 +31,24 @@ export default function Profile() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
-      await api.put('/auth/profile', profile);
-      setMessage('Profile updated');
+      await api.put('/users/settings', profile); // Updated endpoint
+      setMessage('Profile updated successfully');
     } catch {
-      setMessage('Update failed');
+      setMessage('Profile update failed');
     }
+    setLoading(false);
   };
 
   return (
     <div className="container">
-      <h2>Profile</h2>
+      <h2>Update Profile</h2>
       <form onSubmit={handleUpdate} className="form">
         <input
-          name="name"
-          placeholder="Name"
-          value={profile.name}
+          name="username"
+          placeholder="Username"
+          value={profile.username}
           onChange={handleChange}
           required
         />
@@ -53,9 +60,11 @@ export default function Profile() {
           required
           type="email"
         />
-        <button type="submit">Update</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Updating...' : 'Update'}
+        </button>
       </form>
-      <p>{message}</p>
+      {message && <p>{message}</p>}
     </div>
   );
 }
