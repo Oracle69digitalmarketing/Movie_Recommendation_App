@@ -89,3 +89,34 @@ exports.rejectMovie = async (req, res) => {
     res.status(500).json({ message: 'Failed to reject movie' });
   }
 };
+
+// Approve movie (Admin only)
+exports.approveMovie = async (req, res) => {
+  try {
+    const movie = await Movie.findByIdAndUpdate(
+      req.params.id,
+      { status: 'approved' },
+      { new: true }
+    );
+    if (!movie) return res.status(404).json({ message: 'Movie not found' });
+    res.json({ message: 'Movie approved', movie });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to approve movie' });
+  }
+};
+
+// Reject movie (Admin only)
+exports.rejectMovie = async (req, res) => {
+  try {
+    const movie = await Movie.findByIdAndUpdate(
+      req.params.id,
+      { status: 'rejected' },
+      { new: true }
+    );
+    if (!movie) return res.status(404).json({ message: 'Movie not found' });
+    res.json({ message: 'Movie rejected', movie });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to reject movie' });
+  }
+};
+
