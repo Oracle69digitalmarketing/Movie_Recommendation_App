@@ -1,122 +1,71 @@
-const Movie = require('../models/Movie');
+// controllers/movieController.js
+import { prisma } from '../utils/prismaClient.js';
 
-// Add new movie
-exports.addMovie = async (req, res) => {
+// GET /api/movies
+export const getAllMovies = async (req, res) => {
   try {
-    const { title, genre } = req.body;
-    const movie = new Movie({ title, genre, user: req.user.id, status: 'pending' });
-    await movie.save();
-    res.status(201).json({ message: 'Movie added successfully', movie });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to add movie' });
+    const movies = await prisma.movie.findMany();
+    res.json(movies);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch movies' });
   }
 };
 
-// Get all movies (for current user)
-exports.getAllMovies = async (req, res) => {
+// GET /api/movies/:id
+export const getMovieById = async (req, res) => {
+  const { id } = req.params;
   try {
-    const movies = await Movie.find({ user: req.user.id }).sort({ createdAt: -1 });
-    res.json({ movies });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve movies' });
+    const movie = await prisma.movie.findUnique({ where: { id: parseInt(id) } });
+    if (!movie) return res.status(404).json({ error: 'Movie not found' });
+    res.json(movie);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching movie' });
   }
 };
 
-// Get a single movie by ID
-exports.getMovieById = async (req, res) => {
+// POST /api/movies
+export const createMovie = async (req, res) => {
+  const { title, description, releaseDate } = req.body;
   try {
-    const movie = await Movie.findOne({ _id: req.params.id, user: req.user.id });
-    if (!movie) return res.status(404).json({ message: 'Movie not found' });
-    res.json({ movie });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve movie' });
+    const movie = await prisma.movie.create({
+      data: {
+        title,
+        description,
+        releaseDate: new Date(releaseDate)
+      }
+    });
+    res.status(201).json(movie);
+  } catch (err) {
+    res.status(400).json({ error: 'Failed to create movie' });
   }
 };
 
-// Update movie by ID
-exports.updateMovie = async (req, res) => {
+// PUT /api/movies/:id
+export const updateMovie = async (req, res) => {
+  const { id } = req.params;
+  const { title, description, releaseDate } = req.body;
   try {
-    const { title, genre } = req.body;
-    const movie = await Movie.findOneAndUpdate(
-      { _id: req.params.id, user: req.user.id },
-      { title, genre },
-      { new: true }
-    );
-    if (!movie) return res.status(404).json({ message: 'Movie not found or not authorized' });
-    res.json({ message: 'Movie updated', movie });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to update movie' });
+    const updated = await prisma.movie.update({
+      where: { id: parseInt(id) },
+      data: {
+        title,
+        description,
+        releaseDate: new Date(releaseDate)
+      }
+    });
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ error: 'Failed to update movie' });
   }
 };
 
-// Delete movie by ID
-exports.deleteMovie = async (req, res) => {
+// DELETE /api/movies/:id
+export const deleteMovie = async (req, res) => {
+  const { id } = req.params;
   try {
-    const movie = await Movie.findOneAndDelete({ _id: req.params.id, user: req.user.id });
-    if (!movie) return res.status(404).json({ message: 'Movie not found or not authorized' });
+    await prisma.movie.delete({ where: { id: parseInt(id) } });
     res.json({ message: 'Movie deleted' });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to delete movie' });
+  } catch (err) {
+    res.status(400).json({ error: 'Failed to delete movie' });
   }
 };
-
-// Admin: Approve movie
-exports.approveMovie = async (req, res) => {
-  try {
-    const movie = await Movie.findByIdAndUpdate(
-      req.params.id,
-      { status: 'approved' },
-      { new: true }
-    );
-    if (!movie) return res.status(404).json({ message: 'Movie not found' });
-    res.json({ message: 'Movie approved', movie });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to approve movie' });
-  }
-};
-
-// Admin: Reject movie
-exports.rejectMovie = async (req, res) => {
-  try {
-    const movie = await Movie.findByIdAndUpdate(
-      req.params.id,
-      { status: 'rejected' },
-      { new: true }
-    );
-    if (!movie) return res.status(404).json({ message: 'Movie not found' });
-    res.json({ message: 'Movie rejected', movie });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to reject movie' });
-  }
-};
-
-// Approve movie (Admin only)
-exports.approveMovie = async (req, res) => {
-  try {
-    const movie = await Movie.findByIdAndUpdate(
-      req.params.id,
-      { status: 'approved' },
-      { new: true }
-    );
-    if (!movie) return res.status(404).json({ message: 'Movie not found' });
-    res.json({ message: 'Movie approved', movie });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to approve movie' });
-  }
-};
-
-// Reject movie (Admin only)
-exports.rejectMovie = async (req, res) => {
-  try {
-    const movie = await Movie.findByIdAndUpdate(
-      req.params.id,
-      { status: 'rejected' },
-      { new: true }
-    );
-    if (!movie) return res.status(404).json({ message: 'Movie not found' });
-    res.json({ message: 'Movie rejected', movie });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to reject movie' });
-  }
-};
-
