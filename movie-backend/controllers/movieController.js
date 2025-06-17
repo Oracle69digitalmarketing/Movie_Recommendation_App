@@ -4,7 +4,7 @@ const Movie = require('../models/Movie');
 exports.addMovie = async (req, res) => {
   try {
     const { title, genre } = req.body;
-    const movie = new Movie({ title, genre, user: req.user.id });
+    const movie = new Movie({ title, genre, user: req.user.id, status: 'pending' });
     await movie.save();
     res.status(201).json({ message: 'Movie added successfully', movie });
   } catch (error) {
@@ -57,5 +57,35 @@ exports.deleteMovie = async (req, res) => {
     res.json({ message: 'Movie deleted' });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete movie' });
+  }
+};
+
+// Admin: Approve movie
+exports.approveMovie = async (req, res) => {
+  try {
+    const movie = await Movie.findByIdAndUpdate(
+      req.params.id,
+      { status: 'approved' },
+      { new: true }
+    );
+    if (!movie) return res.status(404).json({ message: 'Movie not found' });
+    res.json({ message: 'Movie approved', movie });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to approve movie' });
+  }
+};
+
+// Admin: Reject movie
+exports.rejectMovie = async (req, res) => {
+  try {
+    const movie = await Movie.findByIdAndUpdate(
+      req.params.id,
+      { status: 'rejected' },
+      { new: true }
+    );
+    if (!movie) return res.status(404).json({ message: 'Movie not found' });
+    res.json({ message: 'Movie rejected', movie });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to reject movie' });
   }
 };
