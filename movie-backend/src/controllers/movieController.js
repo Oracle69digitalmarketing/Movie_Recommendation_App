@@ -1,71 +1,50 @@
-// controllers/movieController.js
-import { prisma } from '../utils/prismaClient.js';
+import { PrismaClient } from '@prisma/client';
 
-// GET /api/movies
+const prisma = new PrismaClient();
+
 export const getAllMovies = async (req, res) => {
   try {
     const movies = await prisma.movie.findMany();
-    res.json(movies);
+    res.status(200).json(movies);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch movies' });
+    res.status(500).json({ message: 'Failed to fetch movies', error: err.message });
   }
 };
 
-// GET /api/movies/:id
 export const getMovieById = async (req, res) => {
   const { id } = req.params;
+
   try {
     const movie = await prisma.movie.findUnique({ where: { id: parseInt(id) } });
-    if (!movie) return res.status(404).json({ error: 'Movie not found' });
-    res.json(movie);
+    if (!movie) return res.status(404).json({ message: 'Movie not found' });
+
+    res.status(200).json(movie);
   } catch (err) {
-    res.status(500).json({ error: 'Error fetching movie' });
+    res.status(500).json({ message: 'Failed to fetch movie', error: err.message });
   }
 };
 
-// POST /api/movies
 export const createMovie = async (req, res) => {
-  const { title, description, releaseDate } = req.body;
+  const { title, description, genre, releaseYear } = req.body;
+
   try {
-    const movie = await prisma.movie.create({
-      data: {
-        title,
-        description,
-        releaseDate: new Date(releaseDate)
-      }
+    const newMovie = await prisma.movie.create({
+      data: { title, description, genre, releaseYear: parseInt(releaseYear) },
     });
-    res.status(201).json(movie);
+
+    res.status(201).json(newMovie);
   } catch (err) {
-    res.status(400).json({ error: 'Failed to create movie' });
+    res.status(500).json({ message: 'Failed to create movie', error: err.message });
   }
 };
 
-// PUT /api/movies/:id
-export const updateMovie = async (req, res) => {
-  const { id } = req.params;
-  const { title, description, releaseDate } = req.body;
-  try {
-    const updated = await prisma.movie.update({
-      where: { id: parseInt(id) },
-      data: {
-        title,
-        description,
-        releaseDate: new Date(releaseDate)
-      }
-    });
-    res.json(updated);
-  } catch (err) {
-    res.status(400).json({ error: 'Failed to update movie' });
-  }
-};
-
-// DELETE /api/movies/:id
 export const deleteMovie = async (req, res) => {
   const { id } = req.params;
+
   try {
     await prisma.movie.delete({ where: { id: parseInt(id) } });
-    res.json({ message: 'Movie deleted' });
+    res.status(204).send();
   } catch (err) {
-    res.status(400).json({ error: 'Failed to delete movie' });
+    res.status(500).json({ message: 'Failed to delete movie', error: err.message });
   }
 };
