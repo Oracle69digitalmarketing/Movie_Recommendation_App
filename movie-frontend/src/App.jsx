@@ -1,3 +1,4 @@
+// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
@@ -12,6 +13,7 @@ import Notifications from './pages/Notifications';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import PasswordReset from './pages/PasswordReset';
+import Favorites from './pages/Favorites';
 
 const App = () => {
   return (
@@ -43,6 +45,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <AddMovie />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/favorites"
+          element={
+            <PrivateRoute>
+              <Favorites />
             </PrivateRoute>
           }
         />
