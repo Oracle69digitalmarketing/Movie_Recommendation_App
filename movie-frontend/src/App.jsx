@@ -14,9 +14,8 @@ import Profile from './pages/Profile';
 import Settings from './pages/Settings';
 import PasswordReset from './pages/PasswordReset';
 import Favorites from './pages/Favorites';
-import AdminDashboard from './pages/AdminDashboard';
 import Unauthorized from './pages/Unauthorized';
-import AdminRoutes from './routes/AdminRoutes'; // 👈 New import
+import AdminRoutes from './routes/AdminRoutes'; // ✅ Nested admin routes
 
 const App = () => {
   return (
@@ -28,7 +27,7 @@ const App = () => {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Private/User Routes */}
+        {/* Authenticated Routes */}
         <Route
           path="/dashboard"
           element={
@@ -94,17 +93,7 @@ const App = () => {
           }
         />
 
-        {/* Admin Base Route */}
-        <Route
-          path="/admin"
-          element={
-            <PrivateRoute requiredRole="admin">
-              <AdminDashboard />
-            </PrivateRoute>
-          }
-        />
-
-        {/* Nested Admin Routes (analytics, user management, etc.) */}
+        {/* Nested Admin Panel Routes */}
         <Route
           path="/admin/*"
           element={
@@ -114,7 +103,7 @@ const App = () => {
           }
         />
 
-        {/* Unauthorized */}
+        {/* Unauthorized Page */}
         <Route path="/unauthorized" element={<Unauthorized />} />
       </Routes>
     </Router>
