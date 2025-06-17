@@ -68,6 +68,31 @@ const Home = () => {
                 className="rounded w-full h-72 object-cover"
               />
               <h3 className="mt-2 text-center text-sm font-medium">{movie.title}</h3>
+
+              <div className="text-center mt-2 space-x-2 text-xs">
+                <button
+                  onClick={() => {
+                    const link = `${window.location.origin}/movie/${movie.id}`;
+                    navigator.clipboard.writeText(link);
+                    alert('Link copied!');
+                  }}
+                  className="text-blue-600 underline"
+                >
+                  Share
+                </button>
+
+                <button
+                  onClick={() => {
+                    const embedCode = `<iframe src="${window.location.origin}/movie/${movie.id}" width="600" height="400" frameborder="0" allowfullscreen></iframe>`;
+                    navigator.clipboard.writeText(embedCode);
+                    alert('Embed code copied!');
+                  }}
+                  className="text-green-600 underline"
+                >
+                  Copy Embed Code
+                </button>
+              </div>
+
               <button
                 onClick={() => handleFavorite(movie)}
                 disabled={favoriting[movie.id]}
