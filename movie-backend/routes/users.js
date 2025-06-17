@@ -150,3 +150,32 @@ router.get('/admin/users/:id/logs', authenticateToken, isAdmin, async (req, res)
 });
 
 module.exports = router;
+
+const { Parser } = require('json2csv');
+
+router.get('/admin/export-users', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const users = await User.find({}, '-password -favorites -__v');
+    const parser = new Parser();
+    const csv = parser.parse(users);
+    res.header('Content-Type', 'text/csv');
+    res.attachment('users.csv');
+    return res.send(csv);
+  } catch (err) {
+    res.status(500).json({ message: 'Export failed' });
+  }
+});
+
+router.get('/admin/stats', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const admins = await User.countDocuments({ role: 'admin' });
+    const recentUsers = await User.find().sort({ createdAt: -1 }).limit(5).select('name email role createdAt');
+
+    res.json({ totalUsers, admins, recentUsers });
+  } catch (err) {
+    res.status(500).json({ message: 'Stats fetch failed' });
+  }
+});
+
+
