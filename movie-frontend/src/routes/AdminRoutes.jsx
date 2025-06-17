@@ -1,20 +1,18 @@
-// src/App.jsx or src/routes/AdminRoutes.jsx
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import AdminLayout from './components/AdminLayout';
-import AnalyticsPage from './pages/admin/AnalyticsPage';
-// import other admin pages like UsersPage...
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import AdminLayout from '../components/AdminLayout';
+import AnalyticsPage from '../pages/admin/AnalyticsPage';
+import AdminUsers from '../pages/admin/AdminUsers';
+import NotFound from '../pages/NotFound';
 
-export default function App() {
+export default function AdminRoutes() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/admin" element={<AdminLayout />}>
-          {/* Nested admin routes */}
-          <Route path="analytics" element={<AnalyticsPage />} />
-          {/* <Route path="users" element={<UsersPage />} /> */}
-        </Route>
-        {/* other routes */}
-      </Routes>
-    </Router>
+    <Routes>
+      <Route path="/" element={<AdminLayout />}>
+        <Route path="analytics" element={<AnalyticsPage />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 }
