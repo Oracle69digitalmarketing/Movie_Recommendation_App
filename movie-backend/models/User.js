@@ -5,6 +5,13 @@ const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  favorites: [
+    {
+      movieId: String,
+      title: String,
+      posterPath: String,
+    },
+  ],
 }, { timestamps: true });
 
 // Hash password before save
@@ -21,11 +28,3 @@ UserSchema.methods.matchPassword = async function(enteredPassword) {
 };
 
 module.exports = mongoose.model('User', UserSchema);
-
-favorites: [
-  {
-    movieId: String,
-    title: String,
-    posterPath: String,
-  },
-],
