@@ -1,6 +1,4 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../prisma/client.js';
 
 export const getAllMovies = async (req, res) => {
   try {
@@ -15,7 +13,10 @@ export const getMovieById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const movie = await prisma.movie.findUnique({ where: { id: parseInt(id) } });
+    const movie = await prisma.movie.findUnique({
+      where: { id: parseInt(id) }
+    });
+
     if (!movie) return res.status(404).json({ message: 'Movie not found' });
 
     res.status(200).json(movie);
@@ -29,7 +30,12 @@ export const createMovie = async (req, res) => {
 
   try {
     const newMovie = await prisma.movie.create({
-      data: { title, description, genre, releaseYear: parseInt(releaseYear) },
+      data: {
+        title,
+        description,
+        genre,
+        releaseYear: parseInt(releaseYear)
+      },
     });
 
     res.status(201).json(newMovie);
@@ -42,7 +48,10 @@ export const deleteMovie = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await prisma.movie.delete({ where: { id: parseInt(id) } });
+    await prisma.movie.delete({
+      where: { id: parseInt(id) }
+    });
+
     res.status(204).send();
   } catch (err) {
     res.status(500).json({ message: 'Failed to delete movie', error: err.message });
