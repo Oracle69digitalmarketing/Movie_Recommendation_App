@@ -1,8 +1,3 @@
-Here is the finalized single README.md adjusted for PostgreSQL as your database, keeping the full-stack structure intact and ensuring alignment with expected project standards:
-
-
----
-
 # 🎬 Full-Stack Movie Discovery App
 
 A modern movie discovery and recommendation platform built with **React (Vite)** and **Node.js/Express**, using **PostgreSQL** for persistent data storage. Users can register, log in, browse and favorite movies (fetched from TMDB), and admins can view usage analytics.
