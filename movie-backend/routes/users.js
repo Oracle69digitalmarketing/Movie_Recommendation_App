@@ -7,6 +7,10 @@ const bcrypt = require('bcryptjs');
 const { Parser } = require('json2csv');
 const User = require('../models/User');
 const authenticateToken = require('../middleware/authenticateToken');
+const activityLogger = require('../middleware/activityLogger');
+
+// Add this after authenticateToken
+router.use(authenticateToken, activityLogger);
 const isAdmin = require('../middleware/isAdmin');
 const uploadAvatar = require('../utils/uploadHandler');
 
