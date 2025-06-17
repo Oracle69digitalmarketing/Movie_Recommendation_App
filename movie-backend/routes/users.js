@@ -1,66 +1,52 @@
+// Add to top if not present
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
 const authenticateToken = require('../middleware/authenticateToken');
 
-// Update user settings (name, email)
-router.put('/settings', authenticateToken, async (req, res) => {
-  const userId = req.user.id;
-  const { name, email } = req.body;
+// === FAVORITES ROUTES ===
 
-  if (!name || !email) {
-    return res.status(400).json({ message: 'Name and email are required' });
-  }
-
+// Get all favorites
+router.get('/favorites', authenticateToken, async (req, res) => {
   try {
-    const existingEmailUser = await User.findOne({ email, _id: { $ne: userId } });
-    if (existingEmailUser) {
-      return res.status(409).json({ message: 'Email already in use' });
-    }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { name, email },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.json({ message: 'Profile updated', user: updatedUser });
-  } catch (error) {
+    const user = await User.findById(req.user.id);
+    res.json(user.favorites || []);
+  } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-// Reset password (oldPassword, newPassword)
-router.post('/reset-password', authenticateToken, async (req, res) => {
-  const userId = req.user.id;
-  const { oldPassword, newPassword } = req.body;
-
-  if (!oldPassword || !newPassword) {
-    return res.status(400).json({ message: 'Old and new passwords are required' });
+// Add a movie to favorites
+router.post('/favorites', authenticateToken, async (req, res) => {
+  const { movieId, title, posterPath } = req.body;
+  if (!movieId || !title) {
+    return res.status(400).json({ message: 'movieId and title are required' });
   }
 
   try {
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    const isMatch = await user.matchPassword(oldPassword);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Old password is incorrect' });
+    const user = await User.findById(req.user.id);
+    const exists = user.favorites.find(fav => fav.movieId === movieId);
+    if (exists) {
+      return res.status(409).json({ message: 'Already in favorites' });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(newPassword, salt);
+    user.favorites.push({ movieId, title, posterPath });
     await user.save();
-
-    res.json({ message: 'Password updated successfully' });
-  } catch (error) {
+    res.status(201).json({ message: 'Added to favorites' });
+  } catch (err) {
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-module.exports = router;
+// Remove a favorite movie
+router.delete('/favorites/:movieId', authenticateToken, async (req, res) => {
+  const { movieId } = req.params;
+  try {
+    const user = await User.findById(req.user.id);
+    user.favorites = user.favorites.filter(fav => fav.movieId !== movieId);
+    await user.save();
+    res.json({ message: 'Removed from favorites' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
