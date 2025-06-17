@@ -1,15 +1,40 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const bcrypt = require('bcryptjs');
+const { Parser } = require('json2csv');
+const cloudinaryUpload = require('../utils/cloudinaryUpload');
+const User = require('../models/User');
 const authenticateToken = require('../middleware/authenticateToken');
 const isAdmin = require('../middleware/isAdmin');
+
+// ─────────────────────────────────────────────
+// MULTER CONFIG FOR IMAGE UPLOAD
+// ─────────────────────────────────────────────
+const upload = multer({ dest: 'uploads/' });
+
+// Upload/Update Profile Picture
+router.post('/upload-avatar', authenticateToken, upload.single('avatar'), async (req, res) => {
+  try {
+    const filePath = path.join(__dirname, '..', req.file.path);
+    const avatarUrl = await cloudinaryUpload(filePath);
+
+    await User.findByIdAndUpdate(req.user.id, { avatarUrl });
+
+    fs.unlinkSync(filePath); // delete temp file
+
+    res.json({ message: 'Avatar updated', avatarUrl });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to upload avatar' });
+  }
+});
 
 // ─────────────────────────────────────────────
 // USER ROUTES
 // ─────────────────────────────────────────────
 
-// Update user settings
 router.put('/settings', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { name, email } = req.body;
@@ -40,7 +65,6 @@ router.put('/settings', authenticateToken, async (req, res) => {
   }
 });
 
-// Reset password
 router.post('/reset-password', authenticateToken, async (req, res) => {
   const userId = req.user.id;
   const { oldPassword, newPassword } = req.body;
@@ -67,7 +91,6 @@ router.post('/reset-password', authenticateToken, async (req, res) => {
   }
 });
 
-// Favorite a movie
 router.post('/favorite', authenticateToken, async (req, res) => {
   const { movieId, title, posterPath } = req.body;
   try {
@@ -83,7 +106,6 @@ router.post('/favorite', authenticateToken, async (req, res) => {
   }
 });
 
-// Get favorites
 router.get('/favorites', authenticateToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -149,10 +171,6 @@ router.get('/admin/users/:id/logs', authenticateToken, isAdmin, async (req, res)
   res.json({ message: 'User logs feature not implemented yet' });
 });
 
-module.exports = router;
-
-const { Parser } = require('json2csv');
-
 router.get('/admin/export-users', authenticateToken, isAdmin, async (req, res) => {
   try {
     const users = await User.find({}, '-password -favorites -__v');
@@ -178,4 +196,4 @@ router.get('/admin/stats', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
-
+module.exports = router;
