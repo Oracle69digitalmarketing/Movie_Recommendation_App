@@ -1,36 +1,20 @@
-const express = require('express');
-const router = express.Router();
-const authMiddleware = require('../middleware/authMiddleware');
-const isAdmin = require('../middleware/isAdmin');
-const {
-  addMovie,
+// routes/movies.js
+import express from 'express';
+import {
   getAllMovies,
   getMovieById,
+  createMovie,
   updateMovie,
-  deleteMovie,
-  approveMovie,
-  rejectMovie,
-} = require('../controllers/movieController');
+  deleteMovie
+} from '../controllers/movieController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
-// Public route
-router.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the Movies API' });
-});
+const router = express.Router();
 
-// Protected test route
-router.get('/private', authMiddleware, (req, res) => {
-  res.json({ message: `Hello user ${req.user.id}, you accessed a protected route.` });
-});
-
-// Movie routes
-router.post('/add', authMiddleware, addMovie);
-router.get('/all', authMiddleware, getAllMovies);
-router.get('/:id', authMiddleware, getMovieById);
+router.get('/', getAllMovies);
+router.get('/:id', getMovieById);
+router.post('/', authMiddleware, createMovie);
 router.put('/:id', authMiddleware, updateMovie);
 router.delete('/:id', authMiddleware, deleteMovie);
 
-// Admin-only moderation routes
-router.patch('/:id/approve', authMiddleware, isAdmin, approveMovie);
-router.patch('/:id/reject', authMiddleware, isAdmin, rejectMovie);
-
-module.exports = router;
+export default router;
