@@ -16,16 +16,19 @@ import PasswordReset from './pages/PasswordReset';
 import Favorites from './pages/Favorites';
 import AdminDashboard from './pages/AdminDashboard';
 import Unauthorized from './pages/Unauthorized';
+import AdminRoutes from './routes/AdminRoutes'; // 👈 New import
 
 const App = () => {
   return (
     <Router>
       <Header />
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
 
+        {/* Private/User Routes */}
         <Route
           path="/dashboard"
           element={
@@ -90,6 +93,8 @@ const App = () => {
             </PrivateRoute>
           }
         />
+
+        {/* Admin Base Route */}
         <Route
           path="/admin"
           element={
@@ -98,6 +103,18 @@ const App = () => {
             </PrivateRoute>
           }
         />
+
+        {/* Nested Admin Routes (analytics, user management, etc.) */}
+        <Route
+          path="/admin/*"
+          element={
+            <PrivateRoute requiredRole="admin">
+              <AdminRoutes />
+            </PrivateRoute>
+          }
+        />
+
+        {/* Unauthorized */}
         <Route path="/unauthorized" element={<Unauthorized />} />
       </Routes>
     </Router>
