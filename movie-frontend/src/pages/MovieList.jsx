@@ -25,7 +25,7 @@ export default function MovieList() {
     setLoading(true);
     try {
       const res = await api.get('/movies/all');
-      setMovies(res.data);
+      setMovies(res.data.movies || []);
     } catch {
       setMessage('Failed to fetch movies');
     } finally {
@@ -84,7 +84,7 @@ export default function MovieList() {
 
       <ul>
         {movies.map((movie) => (
-          <li key={movie._id}>
+          <li key={movie._id} style={{ marginBottom: '1rem' }}>
             {editingId === movie._id ? (
               <form onSubmit={handleUpdate} style={{ display: 'inline' }}>
                 <input
@@ -103,8 +103,30 @@ export default function MovieList() {
             ) : (
               <>
                 <strong>{movie.title}</strong> — {movie.genre}
-                <button onClick={() => startEdit(movie)}>Edit</button>
-                <button onClick={() => handleDelete(movie._id)}>Delete</button>
+                <div style={{ marginTop: '0.3rem' }}>
+                  <button onClick={() => startEdit(movie)}>Edit</button>
+                  <button onClick={() => handleDelete(movie._id)}>Delete</button>
+                  <button
+                    onClick={() => {
+                      const link = `${window.location.origin}/movie/${movie._id}`;
+                      navigator.clipboard.writeText(link);
+                      alert('Link copied!');
+                    }}
+                    style={{ marginLeft: '8px', color: 'blue', textDecoration: 'underline' }}
+                  >
+                    Share
+                  </button>
+                  <button
+                    onClick={() => {
+                      const embedCode = `<iframe src="${window.location.origin}/movie/${movie._id}" width="600" height="400" frameborder="0" allowfullscreen></iframe>`;
+                      navigator.clipboard.writeText(embedCode);
+                      alert('Embed code copied!');
+                    }}
+                    style={{ marginLeft: '8px', color: 'green', textDecoration: 'underline' }}
+                  >
+                    Copy Embed Code
+                  </button>
+                </div>
               </>
             )}
           </li>
