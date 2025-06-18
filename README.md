@@ -190,12 +190,11 @@ MIT
 
 🧭 Documentation & Assets
 
-🖼️ System Architecture
+### 🖼️ System Architecture
 
-The architecture diagram provides a high-level overview of how the app functions—from frontend requests to backend handling, database storage, and TMDB API interaction:
+A high-level overview of the full-stack architecture used in the Movie Recommendation App:
 
-
----
+![System Architecture](./assets/architecture.png)
 
 📬 Postman Collections
 
