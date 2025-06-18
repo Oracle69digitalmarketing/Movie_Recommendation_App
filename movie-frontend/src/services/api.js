@@ -1,4 +1,4 @@
-const API_BASE = '/api/users';
+const API_BASE = `${process.env.REACT_APP_BASE_URL}/api/users`;
 
 // Update user settings (PUT /api/users/settings)
 export async function updateUserSettings(data, token) {
@@ -28,7 +28,7 @@ export async function resetUserPassword(data, token) {
 
 // Existing API calls below (example)
 export async function loginUser(credentials) {
-  const response = await fetch('/api/auth/login', {
+  const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(credentials),
@@ -37,7 +37,7 @@ export async function loginUser(credentials) {
 }
 
 export async function registerUser(data) {
-  const response = await fetch('/api/auth/register', {
+  const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
