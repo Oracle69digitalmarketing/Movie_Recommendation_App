@@ -1,18 +1,72 @@
-// routes/favorites.js
+/**
+ * @swagger
+ * tags:
+ *   name: Favorites
+ *   description: Manage user favorite movies
+ */
+
 import express from 'express';
-import { authMiddleware } from '../middleware/authMiddleware.js';
 import {
-  addFavorite,
   getFavorites,
+  addFavorite,
   removeFavorite,
 } from '../controllers/favoriteController.js';
 
-const router = express.Router();
+import authMiddleware from '../middleware/authMiddleware.js';
 
+const router = express.Router();
 router.use(authMiddleware);
 
-router.get('/', getFavorites);              // GET /api/favorites
-router.post('/', addFavorite);             // POST /api/favorites
-router.delete('/:movieId', removeFavorite); // DELETE /api/favorites/:movieId
+/**
+ * @swagger
+ * /api/favorites:
+ *   get:
+ *     summary: Get user's favorite movies
+ *     tags: [Favorites]
+ *     responses:
+ *       200:
+ *         description: List of favorite movies
+ */
+router.get('/', getFavorites);
+
+/**
+ * @swagger
+ * /api/favorites:
+ *   post:
+ *     summary: Add movie to favorites
+ *     tags: [Favorites]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               movieId:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Movie added to favorites
+ */
+router.post('/', addFavorite);
+
+/**
+ * @swagger
+ * /api/favorites/{movieId}:
+ *   delete:
+ *     summary: Remove movie from favorites
+ *     tags: [Favorites]
+ *     parameters:
+ *       - in: path
+ *         name: movieId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Movie ID to remove
+ *     responses:
+ *       200:
+ *         description: Movie removed from favorites
+ */
+router.delete('/:movieId', removeFavorite);
 
 export default router;
