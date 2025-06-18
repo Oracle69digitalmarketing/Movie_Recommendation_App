@@ -190,11 +190,12 @@ MIT
 
 🧭 Documentation & Assets
 
-### 🖼️ System Architecture
+## 🗂️ Architecture Overview
 
-A high-level overview of the full-stack architecture used in the Movie Recommendation App:
+The following diagram illustrates the overall architecture of the Movie Recommendation App — showing the flow between client, server, external API, and database layers.
 
-![Architecture Diagram](https://raw.githubusercontent.com/Oracle69digitalmarketing/Movie_Recommendation_App/main/assets/architecture.png)
+![Architecture Diagram]
+(https://raw.githubusercontent.com/Oracle69digitalmarketing/Movie_Recommendation_App/main/assets/architecture.png)
 
 📬 Postman Collections
 
