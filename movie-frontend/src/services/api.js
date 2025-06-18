@@ -1,6 +1,6 @@
 const API_BASE = `${process.env.REACT_APP_BASE_URL}/api/users`;
 
-// Update user settings (PUT /api/users/settings)
+// ✅ Update user settings
 export async function updateUserSettings(data, token) {
   const response = await fetch(`${API_BASE}/settings`, {
     method: 'PUT',
@@ -13,7 +13,7 @@ export async function updateUserSettings(data, token) {
   return response.json();
 }
 
-// Reset user password (POST /api/users/reset-password)
+// ✅ Reset user password
 export async function resetUserPassword(data, token) {
   const response = await fetch(`${API_BASE}/reset-password`, {
     method: 'POST',
@@ -26,7 +26,7 @@ export async function resetUserPassword(data, token) {
   return response.json();
 }
 
-// Existing API calls below (example)
+// ✅ Login user
 export async function loginUser(credentials) {
   const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/auth/login`, {
     method: 'POST',
@@ -36,6 +36,7 @@ export async function loginUser(credentials) {
   return response.json();
 }
 
+// ✅ Register user
 export async function registerUser(data) {
   const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/auth/register`, {
     method: 'POST',
