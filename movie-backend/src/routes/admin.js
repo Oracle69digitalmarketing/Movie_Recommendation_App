@@ -56,3 +56,11 @@ router.get('/recent-reviews', getRecentReviews);
 router.get('/top-movies', getTopMovies);
 
 export default router;
+
+import fs from 'fs';
+import { swaggerUi, swaggerSpec } from './config/swagger.js';
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Optional: Save swagger.json file
+fs.writeFileSync('./swagger.json', JSON.stringify(swaggerSpec, null, 2));
