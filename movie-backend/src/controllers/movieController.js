@@ -1,11 +1,14 @@
-import prisma from '../prisma/client.js';
+import { PrismaClient } from '@prisma/client';
+import { handleError } from '../utils/handleError.js';
+
+const prisma = new PrismaClient();
 
 export const getAllMovies = async (req, res) => {
   try {
     const movies = await prisma.movie.findMany();
     res.status(200).json(movies);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch movies', error: err.message });
+    handleError(res, err, 'Failed to fetch movies');
   }
 };
 
@@ -13,15 +16,12 @@ export const getMovieById = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const movie = await prisma.movie.findUnique({
-      where: { id: parseInt(id) }
-    });
-
+    const movie = await prisma.movie.findUnique({ where: { id: parseInt(id) } });
     if (!movie) return res.status(404).json({ message: 'Movie not found' });
 
     res.status(200).json(movie);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to fetch movie', error: err.message });
+    handleError(res, err, 'Failed to fetch movie');
   }
 };
 
@@ -30,17 +30,12 @@ export const createMovie = async (req, res) => {
 
   try {
     const newMovie = await prisma.movie.create({
-      data: {
-        title,
-        description,
-        genre,
-        releaseYear: parseInt(releaseYear)
-      },
+      data: { title, description, genre, releaseYear: parseInt(releaseYear) },
     });
 
     res.status(201).json(newMovie);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to create movie', error: err.message });
+    handleError(res, err, 'Failed to create movie');
   }
 };
 
@@ -48,12 +43,9 @@ export const deleteMovie = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await prisma.movie.delete({
-      where: { id: parseInt(id) }
-    });
-
+    await prisma.movie.delete({ where: { id: parseInt(id) } });
     res.status(204).send();
   } catch (err) {
-    res.status(500).json({ message: 'Failed to delete movie', error: err.message });
+    handleError(res, err, 'Failed to delete movie');
   }
 };
