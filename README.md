@@ -188,4 +188,36 @@ A full-stack movie recommendation app built with:
 
 MIT
 
+🧭 Documentation & Assets
+
+🖼️ System Architecture
+
+The architecture diagram provides a high-level overview of how the app functions—from frontend requests to backend handling, database storage, and TMDB API interaction:
+
+
+---
+
+📬 Postman Collections
+
+Use these collections to test the API locally or during demo presentations:
+
+🗂️ Full API Collection
+
+Covers all routes across user, auth, movie discovery, favorites, reviews, watchlist, and admin analytics.
+
+📥 Download Full API Collection
+
+🔐 Admin Analytics Collection
+
+Includes only the secure, role-based admin endpoints for stats, reviews, and top movie reports.
+
+📥 Download Admin Analytics Collection
+
+To use in Postman:
+
+1. Open Postman
+2. Click "Import"
+3. Select the .json file from /postman/
+4. Run requests locally against http://localhost:5000
+
 
