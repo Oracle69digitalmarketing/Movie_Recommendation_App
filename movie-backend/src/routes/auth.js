@@ -1,47 +1,78 @@
-// routes/auth.js
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: Authentication endpoints
+ */
+
 import express from 'express';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { PrismaClient } from '@prisma/client';
+import { registerUser, loginUser, getMe } from '../controllers/authController.js';
+import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
-// Register
-router.post('/register', async (req, res) => {
-  const { username, email, password } = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: {
-        username,
-        email,
-        password: hashedPassword,
-      },
-    });
-    res.status(201).json({ message: 'User registered successfully', userId: user.id });
-  } catch (err) {
-    res.status(500).json({ error: 'Registration failed', details: err.message });
-  }
-});
+/**
+ * @swagger
+ * /api/auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [name, email, password]
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ */
+router.post('/register', registerUser);
 
-// Login
-router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ error: 'Invalid credentials' });
+/**
+ * @swagger
+ * /api/auth/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [email, password]
+ *             properties:
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User logged in
+ */
+router.post('/login', loginUser);
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ error: 'Invalid credentials' });
-
-    const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: '1d',
-    });
-    res.json({ token });
-  } catch (err) {
-    res.status(500).json({ error: 'Login failed', details: err.message });
-  }
-});
+/**
+ * @swagger
+ * /api/auth/me:
+ *   get:
+ *     summary: Get logged-in user info
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Current user info
+ */
+router.get('/me', authMiddleware, getMe);
 
 export default router;
