@@ -1,17 +1,16 @@
 import express from 'express';
-import {
-  addReview,
-  getReviewsByMovie,
-  deleteReview
-} from '../controllers/reviewController.js';
+import { createReview, getReviewsByMovie, deleteReview } from '../controllers/reviewController.js';
 import authMiddleware from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-router.use(authMiddleware);
+// Protected route to post a review
+router.post('/', authMiddleware, createReview);
 
-router.post('/:movieId', addReview);          // Add a review to a movie
-router.get('/:movieId', getReviewsByMovie);   // Get all reviews for a movie
-router.delete('/:reviewId', deleteReview);    // Delete a review
+// Public route to get all reviews for a specific movie
+router.get('/:movieId', getReviewsByMovie);
+
+// Protected route to delete a review (you may want to add admin or owner-only logic)
+router.delete('/:id', authMiddleware, deleteReview);
 
 export default router;
