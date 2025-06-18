@@ -27,3 +27,9 @@
 "scripts": {
   "test": "jest"
 }
+
+"scripts": {
+  "dev": "nodemon index.js",
+  "seed": "node prisma/seed.js",
+  "test": "jest"
+}
