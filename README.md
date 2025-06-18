@@ -194,7 +194,7 @@ MIT
 
 A high-level overview of the full-stack architecture used in the Movie Recommendation App:
 
-![System Architecture](./assets/architecture.png)
+![Architecture Diagram](https://raw.githubusercontent.com/Oracle69digitalmarketing/Movie_Recommendation_App/main/assets/architecture.png)
 
 📬 Postman Collections
 
