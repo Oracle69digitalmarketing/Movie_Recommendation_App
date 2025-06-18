@@ -2,70 +2,76 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Sample movies
-  const movie1 = await prisma.movie.upsert({
-    where: { title: 'Inception' },
-    update: {},
-    create: {
-      title: 'Inception',
-      description: 'Mind-bending thriller by Christopher Nolan.',
-      genre: 'Sci-Fi',
-      releaseYear: 2010,
-    },
-  });
+  // Clear old data
+  await prisma.review.deleteMany();
+  await prisma.watchlist.deleteMany();
+  await prisma.favorite.deleteMany();
+  await prisma.movie.deleteMany();
+  await prisma.user.deleteMany();
 
-  const movie2 = await prisma.movie.upsert({
-    where: { title: 'The Matrix' },
-    update: {},
-    create: {
-      title: 'The Matrix',
-      description: 'Neo discovers the truth about reality.',
-      genre: 'Action',
-      releaseYear: 1999,
-    },
-  });
-
-  // Sample users
-  const user1 = await prisma.user.upsert({
-    where: { email: 'user1@example.com' },
-    update: {},
-    create: {
-      email: 'user1@example.com',
-      password: 'hashedpassword1',
+  // Seed user
+  const user = await prisma.user.create({
+    data: {
+      name: 'Test User',
+      email: 'test@example.com',
+      password: 'hashed_test_password', // Replace with hashed if needed
       role: 'user',
     },
   });
 
-  // Sample review
-  await prisma.review.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      userId: user1.id,
-      movieId: movie1.id,
-      rating: 5,
-      comment: 'Amazing movie!',
-    },
+  // Seed movies
+  const movies = await prisma.movie.createMany({
+    data: [
+      {
+        title: 'Inception',
+        description: 'Mind-bending thriller by Christopher Nolan.',
+        genre: 'Sci-Fi',
+        releaseYear: 2010,
+      },
+      {
+        title: 'The Matrix',
+        description: 'Neo discovers the truth about reality.',
+        genre: 'Action',
+        releaseYear: 1999,
+      },
+    ],
   });
 
-  // Sample watchlist entry
-  await prisma.watchlist.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      userId: user1.id,
-      movieId: movie2.id,
-    },
+  const allMovies = await prisma.movie.findMany();
+
+  // Seed reviews
+  await prisma.review.createMany({
+    data: [
+      {
+        userId: user.id,
+        movieId: allMovies[0].id,
+        rating: 5,
+        comment: 'Amazing visuals and plot!',
+      },
+      {
+        userId: user.id,
+        movieId: allMovies[1].id,
+        rating: 4,
+        comment: 'Classic and mind-opening.',
+      },
+    ],
   });
 
-  console.log('✅ Seed data inserted');
+  // Seed watchlist
+  await prisma.watchlist.createMany({
+    data: [
+      { userId: user.id, movieId: allMovies[0].id },
+      { userId: user.id, movieId: allMovies[1].id },
+    ],
+  });
 }
 
 main()
-  .catch(e => {
-    console.error(e);
-    process.exit(1);
+  .then(() => {
+    console.log('✅ Seed data inserted');
+    return prisma.$disconnect();
   })
-  .finally(async () => {
-    await prisma.$disconnect();
+  .catch((e) => {
+    console.error(e);
+    return prisma.$disconnect();
   });
