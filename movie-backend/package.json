@@ -33,3 +33,10 @@
   "seed": "node prisma/seed.js",
   "test": "jest"
 }
+
+"scripts": {
+  "dev": "nodemon index.js",
+  "start": "node index.js",
+  "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
+  "seed": "node prisma/seed.js"
+}
