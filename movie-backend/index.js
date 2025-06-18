@@ -33,3 +33,6 @@ app.listen(PORT, () => {
 
 // At the bottom of index.js
 export default app;
+
+// Add at the end of index.js
+export default app;
