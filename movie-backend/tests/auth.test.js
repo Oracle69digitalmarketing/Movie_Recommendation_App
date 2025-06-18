@@ -1,22 +1,33 @@
 import request from 'supertest';
-import app from '../index.js'; // Make sure app is exported from index.js
+import app from '../index.js'; // Adjust if app is exported separately
+import { PrismaClient } from '@prisma/client';
 
-describe('Auth Endpoints', () => {
+const prisma = new PrismaClient();
+
+describe('Auth Routes', () => {
+  const testUser = {
+    username: 'jestuser',
+    email: 'jest@example.com',
+    password: 'password123',
+  };
+
+  afterAll(async () => {
+    await prisma.user.deleteMany({ where: { email: testUser.email } });
+    await prisma.$disconnect();
+  });
+
   it('should register a user', async () => {
-    const res = await request(app).post('/api/auth/register').send({
-      email: `test${Date.now()}@mail.com`,
-      password: 'password123',
-      name: 'Test User'
-    });
-    expect(res.statusCode).toEqual(201);
+    const res = await request(app).post('/api/auth/register').send(testUser);
+    expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('token');
   });
 
-  it('should fail login with wrong password', async () => {
+  it('should log in the user', async () => {
     const res = await request(app).post('/api/auth/login').send({
-      email: 'notexist@mail.com',
-      password: 'wrong'
+      email: testUser.email,
+      password: testUser.password,
     });
-    expect(res.statusCode).toBe(401);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty('token');
   });
 });
