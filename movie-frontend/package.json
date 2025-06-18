@@ -12,3 +12,8 @@
     "start": "react-scripts start"
   }
 }
+
+"jest": {
+  "testEnvironment": "jsdom",
+  "setupFilesAfterEnv": ["<rootDir>/src/setupTests.js"]
+}
