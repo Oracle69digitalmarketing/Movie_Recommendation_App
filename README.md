@@ -194,8 +194,7 @@ MIT
 
 The following diagram illustrates the overall architecture of the Movie Recommendation App — showing the flow between client, server, external API, and database layers.
 
-![Architecture Diagram]
-(https://raw.githubusercontent.com/Oracle69digitalmarketing/Movie_Recommendation_App/main/assets/architecture.png)
+![Architecture Diagram](./assets/architecture.png)
 
 📬 Postman Collections
 
