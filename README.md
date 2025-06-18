@@ -155,7 +155,34 @@ Deployment & CI/CD pipelines
 
 
 ---
-[![codecov](https://codecov.io/gh/YOUR_USERNAME/YOUR_REPO/branch/main/graph/badge.svg)](https://codecov.io/gh/YOUR_USERNAME/YOUR_REPO)
+# 🎬 Movie Recommendation App
+
+[![CI](https://github.com/Oracle69digitalmarketing/Movie_Recommendation_App/actions/workflows/test.yml/badge.svg)](https://github.com/Oracle69digitalmarketing/Movie_Recommendation_App/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/Oracle69digitalmarketing/Movie_Recommendation_App/branch/main/graph/badge.svg)](https://codecov.io/gh/Oracle69digitalmarketing/Movie_Recommendation_App)
+[![Vercel](https://vercel.badge/Oracle69digitalmarketing/Movie_Recommendation_App.svg)](https://movie-recommendation-app.vercel.app)
+
+A full-stack movie recommendation app built with:
+
+- 💻 **Frontend:** React + Vite + Tailwind  
+- 🌐 **Backend:** Express + Prisma + PostgreSQL  
+- 🔐 JWT Auth, Role-Based Access Control (RBAC)  
+- ⭐ Favorites, Watchlist, Reviews  
+- 🧪 Unit Testing + CI/CD (Jest, GitHub Actions)  
+- 📊 Code Coverage (Codecov)  
+- 🚀 Live Demo: [movie-recommendation-app.vercel.app](https://movie-recommendation-app.vercel.app)
+
+---
+
+## 📦 Tech Stack
+
+| Layer      | Stack                                |
+|------------|--------------------------------------|
+| Frontend   | React, Vite, Tailwind CSS            |
+| Backend    | Node.js, Express, Prisma, PostgreSQL |
+| Auth       | JWT + Bcrypt                         |
+| Testing    | Jest, Supertest                      |
+| CI/CD      | GitHub Actions + Codecov             |
+| Hosting    | Vercel / Railway / Render            |
 
 📄 License
 
