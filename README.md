@@ -1,7 +1,20 @@
+Here's your updated README.md with:
+
+✅ The full and corrected recommendation engine section.
+
+✅ Fixed JSON format.
+
+✅ Updated 📦 Docker support + CI/CD pipelines note.
+
+✅ Marked Full Deployment as ✅ in the checklist.
+
+
+
+---
+
 # 🎬 Full-Stack Movie Recommendation App
 
 A modern full-stack movie discovery and recommendation platform built with **React (Vite)** and **Node.js/Express**, using **PostgreSQL** (via Prisma) for persistent storage. Users can register, browse trending movies via TMDB, save favorites, and access custom experiences. Admins have a dedicated analytics dashboard. Clean UI, secure authentication, and real-time data make it both usable and scalable.
-
 
 ## 🚀 Live Deployment
 
@@ -9,12 +22,27 @@ A modern full-stack movie discovery and recommendation platform built with **Rea
 - 🔗 Backend: [Render](https://movie-recommendation-app-api.onrender.com)
 - 🛠️ CI/CD: GitHub Actions + Codecov
 
-
 ## 🧱 Project Structure
 
-Movie_Recommendation_App/ ├── movie-frontend/            # Vite + React + Tailwind CSS │   ├── src/ │   │   ├── components/ │   │   ├── pages/ │   │   ├── routes/ │   │   ├── services/ │   │   └── utils/ │   ├── public/ │   └── vite.config.js
+Movie_Recommendation_App/
+├── movie-frontend/            # Vite + React + Tailwind CSS  
+│   ├── src/  
+│   │   ├── components/  
+│   │   ├── pages/  
+│   │   ├── routes/  
+│   │   ├── services/  
+│   │   └── utils/  
+│   ├── public/  
+│   └── vite.config.js
 
-├── movie-backend/             # Node.js + Express + PostgreSQL (Prisma) │   ├── config/ │   ├── controllers/ │   ├── middleware/ │   ├── models/ (if not using Prisma) │   ├── routes/ │   ├── prisma/ │   └── server.js
+├── movie-backend/             # Node.js + Express + PostgreSQL (Prisma)  
+│   ├── config/  
+│   ├── controllers/  
+│   ├── middleware/  
+│   ├── models/ (if not using Prisma)  
+│   ├── routes/  
+│   ├── prisma/  
+│   └── server.js
 
 ## 🧠 Recommendation Engine
 
@@ -33,53 +61,76 @@ Returns personalized recommendations based on user favorites.
 `Authorization: Bearer <JWT>`
 
 **Response:**
-
 ```json
 [
   {
     "id": 12,
     "title": "Inception",
     "genres": "Action,Sci-Fi,Thriller",
+    "year": 2010,
+    "rating": 8.8,
+    "posterUrl": "https://image.tmdb.org/t/p/w500/qmDpIHrmpJINaRKAfWQfftjCdyi.jpg",
+    "overview": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO.",
+    "runtime": 148
+  },
+  {
+    "id": 45,
+    "title": "Interstellar",
+    "genres": "Adventure,Drama,Sci-Fi",
+    "year": 2014,
+    "rating": 8.6,
+    "posterUrl": "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
+    "overview": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+    "runtime": 169
   }
 ]
 
+✨ Core Features
 
-## ✨ Core Features
+🎥 Movie Discovery
 
-### 🎥 Movie Discovery
-- Integrated with **TMDB API**
-- Search, trending, and detailed movie views
+Integrated with TMDB API
 
-### 👤 User Experience
-- Register/login with **JWT authentication**
-- Secure password hashing with bcrypt
-- Save and manage **favorite movies**
-- Edit profile and settings
-
-### 🛡️ Admin Panel
-- Admin-only dashboard with activity logs and usage analytics
-- Role-based access control (`user`, `admin`)
-- Analytics endpoints for engagement and content tracking
+Search, trending, and detailed movie views
 
 
-## ⚙️ Tech Stack Overview
+👤 User Experience
 
-| Layer       | Stack                                    |
-|-------------|------------------------------------------|
-| Frontend    | React, Vite, Tailwind CSS, Axios         |
-| Backend     | Node.js, Express, Prisma ORM             |
-| Database    | PostgreSQL                               |
-| Auth        | JWT, Bcrypt                              |
-| CI/CD       | GitHub Actions, Codecov                  |
-| API         | [TMDB API](https://www.themoviedb.org/)  |
-| Hosting     | Vercel (Frontend), Render/Railway (API)  |
+Register/login with JWT authentication
+
+Secure password hashing with bcrypt
+
+Save and manage favorite movies
+
+Edit profile and settings
 
 
-## 📦 Installation & Setup
+🛡️ Admin Panel
 
-### 1. Clone the Repository
+Admin-only dashboard with activity logs and usage analytics
 
-```bash
+Role-based access control (user, admin)
+
+Analytics endpoints for engagement and content tracking
+
+
+⚙️ Tech Stack Overview
+
+Layer	Stack
+
+Frontend	React, Vite, Tailwind CSS, Axios
+Backend	Node.js, Express, Prisma ORM
+Database	PostgreSQL
+Auth	JWT, Bcrypt
+CI/CD	GitHub Actions, Codecov
+API	TMDB API
+Hosting	Vercel (Frontend), Render/Railway (API)
+
+
+📦 Installation & Setup
+
+1. Clone the Repository
+
 git clone https://github.com/Oracle69digitalmarketing/Movie_Recommendation_App.git
 cd Movie_Recommendation_App
 
@@ -87,9 +138,9 @@ cd Movie_Recommendation_App
 
 movie-backend/.env
 
-PORT=5000
-DATABASE_URL=postgresql://user:password@localhost:5432/moviedb
-JWT_SECRET=your_jwt_secret
+PORT=5000  
+DATABASE_URL=postgresql://user:password@localhost:5432/moviedb  
+JWT_SECRET=your_jwt_secret  
 TMDB_API_KEY=your_tmdb_key
 
 movie-frontend/.env
@@ -119,6 +170,8 @@ GET	/api/movies	Fetch movies from TMDB
 POST	/api/favorites	Save a movie to favorites
 GET	/api/favorites	Get user's favorite movies
 GET	/api/admin/analytics	Admin-only usage stats
+GET	/recommend	Get recommended movies
+
 
 🔐 Authentication & Security
 
@@ -126,9 +179,10 @@ JWT stored in localStorage
 
 Role-based route protection using custom PrivateRoute
 
-Backend guards protect /admin/* endpoints
+Backend guards for /admin/* endpoints
 
 Passwords hashed using bcrypt
+
 
 📊 Admin Dashboard
 
@@ -139,6 +193,7 @@ User activity logs
 Movie engagement stats
 
 Top watched or favorited content
+
 
 🧪 Testing & CI
 
@@ -151,20 +206,16 @@ Code coverage reporting via Codecov
 
 npm test
 
-
 📬 API Collections (Postman)
 
 🔧 Full API Collection
-
 Includes all endpoints for user, movie, favorites, and admin.
-
 📥 Download Collection
 
 🔐 Admin API Collection
-
 Secure, role-protected routes for analytics and audit logs.
-
 📥 Download Admin Collection
+
 
 To import:
 
@@ -175,6 +226,7 @@ To import:
 
 
 3. Run against http://localhost:5000
+
 
 
 📈 Deployment Stack
@@ -200,8 +252,8 @@ Codecov	Test coverage reports
 
 🧵 Real-time logs & notifications
 
-📦 Docker support + CI/CD pipelines
 
+📦 Docker support + CI/CD pipelines (Planned, partially implemented)
 
 🧪 Checklist (MVP Readiness)
 
@@ -214,14 +266,13 @@ Admin Analytics	✅
 PostgreSQL Integration	✅
 Role-Based Route Protection	✅
 Clean UI (Tailwind)	✅
-Full Deployment	🔲
+Full Deployment	✅
 
 
 📄 License
 
 MIT — Feel free to use, modify, and share.
 
-
 📸 Architecture Overview
 
-
+(Include your architecture diagram image here — e.g., assets/architecture.png)
