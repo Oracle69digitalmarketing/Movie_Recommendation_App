@@ -30,48 +30,35 @@ const Favorites = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-2xl font-semibold mb-4">My Favorite Movies</h2>
+      <h1 className="text-xl font-bold mb-4">Your Favorite Movies</h1>
 
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Filter by genre..."
-          value={genre}
-          onChange={(e) => {
-            setGenre(e.target.value);
-            setPage(1);
-          }}
-          className="border px-2 py-1 rounded"
-        />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {favorites.map((movie) => (
+          <div key={movie.id} className="border p-2 rounded">
+            <h2 className="font-semibold">{movie.title}</h2>
+            <p>{movie.genre}</p>
+          </div>
+        ))}
       </div>
 
-      {favorites.length === 0 ? (
-        <p>No favorites yet.</p>
-      ) : (
-        <>
-          <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {favorites.map((movie, index) => (
-              <li key={index} className="bg-white shadow p-2 rounded text-center">
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.posterPath}`}
-                  alt={movie.title}
-                  className="w-full rounded"
-                />
-                <h3 className="mt-2 text-sm font-medium">{movie.title}</h3>
-                <p className="text-xs text-gray-500">{movie.genre}</p>
-              </li>
-            ))}
-          </ul>
+      <div className="flex justify-between mt-4">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((prev) => prev - 1)}
+          className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50"
+        >
+          Prev
+        </button>
+        <button
+          disabled={page * limit >= total}
+          onClick={() => setPage((prev) => prev + 1)}
+          className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};
 
-          <div className="mt-4 flex gap-2 justify-center">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((prev) => prev - 1)}
-              className="bg-gray-200 px-3 py-1 rounded disabled:opacity-50"
-            >
-              Prev
-            </button>
-            <button
-              disabled={page * limit >= total}
-              onClick={() => setPage((prev) => prev + 1)}
-              className="bg-gray-200 px-3 py-1 rounded disabled
+export default Favorites;
