@@ -1,8 +1,23 @@
-const API_BASE = `${process.env.REACT_APP_BASE_URL}/api/users`;
+// src/services/api.js
+
+import axios from 'axios';
+
+const api = axios.create({
+  baseURL: `${process.env.REACT_APP_BASE_URL}/api`,
+});
+
+// ✅ Set Authorization token globally
+export function setAuthToken(token) {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+}
 
 // ✅ Update user settings
 export async function updateUserSettings(data, token) {
-  const response = await fetch(`${API_BASE}/settings`, {
+  const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/settings`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -15,7 +30,7 @@ export async function updateUserSettings(data, token) {
 
 // ✅ Reset user password
 export async function resetUserPassword(data, token) {
-  const response = await fetch(`${API_BASE}/reset-password`, {
+  const response = await fetch(`${process.env.REACT_APP_BASE_URL}/api/users/reset-password`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -46,12 +61,5 @@ export async function registerUser(data) {
   return response.json();
 }
 
-import axios from 'axios';
-
-export function setAuthToken(token) {
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  } else {
-    delete axios.defaults.headers.common['Authorization'];
-  }
-}
+// ✅ Default axios instance for direct API calls
+export default api;
