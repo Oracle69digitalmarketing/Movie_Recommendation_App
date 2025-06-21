@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
-import api, { setAuthToken } from '../services/api';
+import { setAuthToken } from '../services/api';
 
 export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
@@ -12,13 +12,18 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post('/auth/login', form);
-      if (res.data.token) {
-        setAuthToken(res.data.token);
-        login(res.data.token, res.data.user);
+      const res = await fetch('/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      }).then(res => res.json());
+
+      if (res.token) {
+        setAuthToken(res.token);
+        login(res.token, res.user);
         navigate('/dashboard');
       } else {
-        setMessage(res.data.message || 'Login failed');
+        setMessage(res.message || 'Login failed');
       }
     } catch {
       setMessage('Server error');
