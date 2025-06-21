@@ -33,15 +33,16 @@ Returns personalized recommendations based on user favorites.
 `Authorization: Bearer <JWT>`
 
 **Response:**
+
 ```json
 [
   {
     "id": 12,
     "title": "Inception",
     "genres": "Action,Sci-Fi,Thriller",
-    ...
   }
 ]
+
 
 ## ✨ Core Features
 
