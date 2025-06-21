@@ -10,7 +10,6 @@ Here's your updated README.md with:
 
 
 
----
 
 # 🎬 Full-Stack Movie Recommendation App
 
@@ -82,6 +81,7 @@ Returns personalized recommendations based on user favorites.
     "posterUrl": "https://image.tmdb.org/t/p/w500/rAiYTfKGqDCRIIqo664sY9XZIvQ.jpg",
     "overview": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
     "runtime": 169
+     ...
   }
 ]
 
