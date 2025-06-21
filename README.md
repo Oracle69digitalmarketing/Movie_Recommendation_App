@@ -19,6 +19,32 @@ Movie_Recommendation_App/ ├── movie-frontend/            # Vite + React + 
 ├── movie-backend/             # Node.js + Express + PostgreSQL (Prisma) │   ├── config/ │   ├── controllers/ │   ├── middleware/ │   ├── models/ (if not using Prisma) │   ├── routes/ │   ├── prisma/ │   └── server.js
 
 ---
+## 🧠 Recommendation Engine
+
+We use a basic **content-based filtering** approach:
+- Each user's favorite movies are analyzed for genres.
+- The system recommends movies with overlapping genres.
+- Future versions will support collaborative filtering and ML models.
+
+### 🔗 Endpoint: `/recommend`
+
+**GET /recommend**
+
+Returns personalized recommendations based on user favorites.
+
+**Headers:**
+`Authorization: Bearer <JWT>`
+
+**Response:**
+```json
+[
+  {
+    "id": 12,
+    "title": "Inception",
+    "genres": "Action,Sci-Fi,Thriller",
+    ...
+  }
+]
 
 ## ✨ Core Features
 
