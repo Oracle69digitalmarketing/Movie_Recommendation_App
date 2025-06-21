@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
-import api, { setAuthToken } from '../services/api';
+import { setAuthToken } from '../services/api';
 import AuthContext from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Axios explicitly imported
 
 export default function MovieList() {
   const [movies, setMovies] = useState([]);
@@ -24,7 +25,7 @@ export default function MovieList() {
   const fetchMovies = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/movies/all');
+      const res = await axios.get('/movies/all');
       setMovies(res.data.movies || []);
     } catch {
       setMessage('Failed to fetch movies');
@@ -36,7 +37,7 @@ export default function MovieList() {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this movie?')) return;
     try {
-      await api.delete(`/movies/${id}`);
+      await axios.delete(`/movies/${id}`);
       setMovies(movies.filter((m) => m._id !== id));
       setMessage('Movie deleted successfully');
     } catch {
@@ -59,11 +60,9 @@ export default function MovieList() {
     e.preventDefault();
     setLoading(true);
     try {
-      await api.put(`/movies/${editingId}`, editForm);
+      await axios.put(`/movies/${editingId}`, editForm);
       setMovies(
-        movies.map((m) =>
-          m._id === editingId ? { ...m, ...editForm } : m
-        )
+        movies.map((m) => (m._id === editingId ? { ...m, ...editForm } : m))
       );
       cancelEdit();
       setMessage('Movie updated');
@@ -89,16 +88,24 @@ export default function MovieList() {
               <form onSubmit={handleUpdate} style={{ display: 'inline' }}>
                 <input
                   value={editForm.title}
-                  onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, title: e.target.value })
+                  }
                   required
                 />
                 <input
                   value={editForm.genre}
-                  onChange={(e) => setEditForm({ ...editForm, genre: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, genre: e.target.value })
+                  }
                   required
                 />
-                <button type="submit" disabled={loading}>Save</button>
-                <button type="button" onClick={cancelEdit}>Cancel</button>
+                <button type="submit" disabled={loading}>
+                  Save
+                </button>
+                <button type="button" onClick={cancelEdit}>
+                  Cancel
+                </button>
               </form>
             ) : (
               <>
@@ -112,7 +119,11 @@ export default function MovieList() {
                       navigator.clipboard.writeText(link);
                       alert('Link copied!');
                     }}
-                    style={{ marginLeft: '8px', color: 'blue', textDecoration: 'underline' }}
+                    style={{
+                      marginLeft: '8px',
+                      color: 'blue',
+                      textDecoration: 'underline',
+                    }}
                   >
                     Share
                   </button>
@@ -122,7 +133,11 @@ export default function MovieList() {
                       navigator.clipboard.writeText(embedCode);
                       alert('Embed code copied!');
                     }}
-                    style={{ marginLeft: '8px', color: 'green', textDecoration: 'underline' }}
+                    style={{
+                      marginLeft: '8px',
+                      color: 'green',
+                      textDecoration: 'underline',
+                    }}
                   >
                     Copy Embed Code
                   </button>
