@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
-import AuthContext from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Use Axios directly
-import { setAuthToken } from '../services/api'; // Only import named exports from api.js
+import axios from 'axios';
+import { setAuthToken } from '../services/api';
+import AuthContext from '../context/AuthContext';
 
 export default function AddMovie() {
   const [form, setForm] = useState({ title: '', genre: '' });
@@ -13,12 +13,16 @@ export default function AddMovie() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setAuthToken(token); // set token if needed
+      setAuthToken(token);
       const res = await axios.post('/movies/add', form);
-      setMessage('Movie added');
-      setForm({ title: '', genre: '' });
-      navigate('/dashboard');
-    } catch (err) {
+      if (res.status === 201 || res.status === 200) {
+        setMessage('Movie added successfully');
+        setForm({ title: '', genre: '' });
+        navigate('/dashboard');
+      } else {
+        setMessage('Failed to add movie');
+      }
+    } catch {
       setMessage('Add movie failed');
     }
   };
@@ -28,15 +32,15 @@ export default function AddMovie() {
       <h2>Add Movie</h2>
       <form onSubmit={handleSubmit} className="form">
         <input
-          required
           type="text"
+          required
           placeholder="Title"
           value={form.title}
           onChange={(e) => setForm({ ...form, title: e.target.value })}
         />
         <input
-          required
           type="text"
+          required
           placeholder="Genre"
           value={form.genre}
           onChange={(e) => setForm({ ...form, genre: e.target.value })}
