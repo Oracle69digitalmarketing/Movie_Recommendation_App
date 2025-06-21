@@ -2,7 +2,6 @@
 
 A modern full-stack movie discovery and recommendation platform built with **React (Vite)** and **Node.js/Express**, using **PostgreSQL** (via Prisma) for persistent storage. Users can register, browse trending movies via TMDB, save favorites, and access custom experiences. Admins have a dedicated analytics dashboard. Clean UI, secure authentication, and real-time data make it both usable and scalable.
 
----
 
 ## 🚀 Live Deployment
 
@@ -10,7 +9,6 @@ A modern full-stack movie discovery and recommendation platform built with **Rea
 - 🔗 Backend: [Render](https://movie-recommendation-app-api.onrender.com)
 - 🛠️ CI/CD: GitHub Actions + Codecov
 
----
 
 ## 🧱 Project Structure
 
@@ -18,7 +16,6 @@ Movie_Recommendation_App/ ├── movie-frontend/            # Vite + React + 
 
 ├── movie-backend/             # Node.js + Express + PostgreSQL (Prisma) │   ├── config/ │   ├── controllers/ │   ├── middleware/ │   ├── models/ (if not using Prisma) │   ├── routes/ │   ├── prisma/ │   └── server.js
 
----
 ## 🧠 Recommendation Engine
 
 We use a basic **content-based filtering** approach:
@@ -63,7 +60,6 @@ Returns personalized recommendations based on user favorites.
 - Role-based access control (`user`, `admin`)
 - Analytics endpoints for engagement and content tracking
 
----
 
 ## ⚙️ Tech Stack Overview
 
@@ -77,7 +73,6 @@ Returns personalized recommendations based on user favorites.
 | API         | [TMDB API](https://www.themoviedb.org/)  |
 | Hosting     | Vercel (Frontend), Render/Railway (API)  |
 
----
 
 ## 📦 Installation & Setup
 
@@ -113,9 +108,6 @@ cd ../movie-frontend
 npm install
 npm run dev
 
-
----
-
 🌐 Key API Routes
 
 Method	Route	Description
@@ -127,10 +119,6 @@ POST	/api/favorites	Save a movie to favorites
 GET	/api/favorites	Get user's favorite movies
 GET	/api/admin/analytics	Admin-only usage stats
 
-
-
----
-
 🔐 Authentication & Security
 
 JWT stored in localStorage
@@ -141,10 +129,6 @@ Backend guards protect /admin/* endpoints
 
 Passwords hashed using bcrypt
 
-
-
----
-
 📊 Admin Dashboard
 
 Accessible only by authenticated users with the admin role. Displays:
@@ -154,10 +138,6 @@ User activity logs
 Movie engagement stats
 
 Top watched or favorited content
-
-
-
----
 
 🧪 Testing & CI
 
@@ -170,8 +150,6 @@ Code coverage reporting via Codecov
 
 npm test
 
-
----
 
 📬 API Collections (Postman)
 
@@ -198,10 +176,6 @@ To import:
 3. Run against http://localhost:5000
 
 
-
-
----
-
 📈 Deployment Stack
 
 Service	Usage
@@ -212,9 +186,6 @@ Supabase	PostgreSQL hosting (optional)
 GitHub Actions	CI/CD pipeline
 Codecov	Test coverage reports
 
-
-
----
 
 🧭 Future Enhancements
 
@@ -231,9 +202,6 @@ Codecov	Test coverage reports
 📦 Docker support + CI/CD pipelines
 
 
-
----
-
 🧪 Checklist (MVP Readiness)
 
 Feature	Status
@@ -248,15 +216,10 @@ Clean UI (Tailwind)	✅
 Full Deployment	🔲
 
 
-
----
-
 📄 License
 
 MIT — Feel free to use, modify, and share.
 
-
----
 
 📸 Architecture Overview
 
