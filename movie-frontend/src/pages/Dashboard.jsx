@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import AuthContext from '../context/AuthContext';
-import api, { setAuthToken } from '../services/api';
+import { setAuthToken } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
@@ -21,8 +21,11 @@ export default function Dashboard() {
 
   const fetchProtectedMessage = async () => {
     try {
-      const res = await api.get('/movies/private');
-      setMessage(res.data.message);
+      const res = await fetch('/movies/private', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setMessage(data.message || 'No message');
     } catch {
       setMessage('Failed to fetch message');
     }
@@ -30,8 +33,11 @@ export default function Dashboard() {
 
   const fetchMovies = async () => {
     try {
-      const res = await api.get('/movies');
-      setMovies(res.data);
+      const res = await fetch('/movies', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setMovies(data || []);
     } catch {
       setMessage('Failed to fetch movies');
     }
@@ -40,13 +46,21 @@ export default function Dashboard() {
   const handleAddOrUpdateMovie = async (e) => {
     e.preventDefault();
     try {
-      if (editingId) {
-        await api.put(`/movies/${editingId}`, movieForm);
-        setMessage('Movie updated');
-      } else {
-        await api.post('/movies/add', movieForm);
-        setMessage('Movie added');
-      }
+      const url = editingId ? `/movies/${editingId}` : '/movies/add';
+      const method = editingId ? 'PUT' : 'POST';
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(movieForm),
+      });
+
+      if (!res.ok) throw new Error();
+
+      setMessage(editingId ? 'Movie updated' : 'Movie added');
       setMovieForm({ title: '', genre: '' });
       setEditingId(null);
       fetchMovies();
@@ -62,7 +76,13 @@ export default function Dashboard() {
 
   const handleDelete = async (id) => {
     try {
-      await api.delete(`/movies/${id}`);
+      const res = await fetch(`/movies/${id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) throw new Error();
+
       setMessage('Movie deleted');
       fetchMovies();
     } catch {
