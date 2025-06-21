@@ -38,3 +38,4 @@ ehthumbs.db
 # OS files
 Icon?
 node_modules/
+.vercel
