@@ -1,8 +1,3 @@
-Here’s your full corrected README, clean, complete, and ready for GitHub. It includes the properly closed JSON block, the recommendation engine section, and all prior enhancements:
-
-
----
-
 # 🎬 Full-Stack Movie Recommendation App
 
 A modern full-stack movie discovery and recommendation platform built with **React (Vite)** and **Node.js/Express**, using **PostgreSQL** (via Prisma) for persistent storage. Users can register, browse trending movies via TMDB, save favorites, and access custom experiences. Admins have a dedicated analytics dashboard. Clean UI, secure authentication, and real-time data make it both usable and scalable.
@@ -75,6 +70,7 @@ Returns personalized recommendations based on user favorites.
     "runtime": 169
   }
 ]
+```
 
 ✨ Core Features
 
@@ -264,9 +260,6 @@ Full Deployment	✅
 
 MIT — Feel free to use, modify, and share.
 
-📸 Architecture Overview
+## 📸 Architecture Overview
 
-(Insert your system diagram here, e.g. assets/architecture.png)
-
-Let me know if you want this pushed to GitHub or converted to PDF/HTML.
-
+![System Architecture](./assets/architecture.png)
